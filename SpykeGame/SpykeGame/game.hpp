@@ -4,14 +4,22 @@
 #include <stack>
 #include <SFML/Graphics.hpp>
 
+#include "texture_manager.hpp"
+
 class GameState;
 
 class Game
 {
-public:
-	static void start();
+private:
 
+	void loadTextures();
+
+public:
+
+	sf::RenderWindow window;
 	std::stack<GameState*> states;
+	TextureManager texmgr;
+	sf::Sprite background;
 
 	void pushState(GameState* state);
 	void popState();
@@ -22,11 +30,6 @@ public:
 
 	Game();
 	~Game();
-
-private:
-
-	
-	static sf::RenderWindow _window;
 };
 
 #endif /* GAME_HPP */

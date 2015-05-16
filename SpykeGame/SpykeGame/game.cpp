@@ -1,10 +1,16 @@
 #include <stack>
-
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
+#include "stdafx.h"
 #include "game.hpp"
 #include "game_state.hpp"
+#include "texture_manager.hpp"
+
+void Game::loadTextures()
+{
+	texmgr.loadTexture("background", "assets/background.png");
+}
 
 void Game::pushState(GameState* state)
 {
@@ -39,7 +45,7 @@ void Game::gameLoop()
 {
 	sf::Clock clock;
 
-	while (this->_window.isOpen())
+	while (this->window.isOpen())
 	{
 		sf::Time elapsed = clock.restart();
 		float dt = elapsed.asSeconds();
@@ -48,16 +54,18 @@ void Game::gameLoop()
 		peekState()->handleInput();
 		peekState()->update(dt);
 
-		this->_window.clear(sf::Color::Black);
+		this->window.clear(sf::Color::Black);
 		peekState()->draw(dt);
-		this->_window.display();
+		this->window.display();
 	}
 }
 
 Game::Game()
 {
-	this->_window.create(sf::VideoMode(800, 600), "Spyke");
-	this->_window.setFramerateLimit(60);
+	this->window.create(sf::VideoMode(800, 600), "Spyke");
+	this->window.setFramerateLimit(60);
+
+	this->background.setTexture(this->texmgr.getRef("background"));
 }
 
 Game::~Game()

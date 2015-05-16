@@ -1,8 +1,10 @@
-# Compuled Object files
+# Compiled Object files
 *.slo
 *.lo
 *.o
 *.obj
+*.idb
+*.ipch
 
 # Precompiled Headers
 *.gch
@@ -27,3 +29,5 @@
 *.suo
 *.vcxproj.user
 *.opensdf
+*.tlog
+*.vcxproj
