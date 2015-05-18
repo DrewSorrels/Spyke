@@ -9,7 +9,24 @@
 
 void Game::loadTextures()
 {
+	texmgr.loadTexture("grass", "assets/grass.png");
+	texmgr.loadTexture("dirt", "assets/dirt.png");
+	texmgr.loadTexture("stone", "assets/stone.png");
+
 	texmgr.loadTexture("background", "assets/background.png");
+}
+
+void Game::loadTiles()
+{
+	Animation staticAnim(0, 0, 1.0f); // For any tile that does not move
+	tiles["grass"] =
+		Tile(this->tileSize, 1, texmgr.getRef("grass"), { staticAnim }, TileType::GRASS);
+	tiles["dirt"] =
+		Tile(this->tileSize, 1, texmgr.getRef("dirt"), { staticAnim }, TileType::DIRT);
+	tiles["stone"] =
+		Tile(this->tileSize, 1, texmgr.getRef("stone"), { staticAnim }, TileType::STONE);
+
+	return;
 }
 
 void Game::pushState(GameState* state)
@@ -62,6 +79,9 @@ void Game::gameLoop()
 
 Game::Game()
 {
+	this->loadTextures();
+	this->loadTiles();
+
 	this->window.create(sf::VideoMode(800, 600), "Spyke");
 	this->window.setFramerateLimit(60);
 
@@ -70,6 +90,6 @@ Game::Game()
 
 Game::~Game()
 {
-	// Clear all states from the stack
+	// Clear all states from the stack to remove references
 	while (!this->states.empty()) popState();
 }
