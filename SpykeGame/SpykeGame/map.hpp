@@ -12,7 +12,7 @@ class Map
 {
 private:
 	
-	void depthFirstSearch(std::wstring_convert<TileType>& whitelist, sf::Vector2i pos, int label, int type);
+	void depthFirstSearch(std::vector<TileType>& whitelist, sf::Vector2i pos, int label, int type);
 
 public:
 

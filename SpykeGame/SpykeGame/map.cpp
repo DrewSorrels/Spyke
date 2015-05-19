@@ -67,9 +67,9 @@ void Map::save(const std::string& filename)
 
 void Map::draw(sf::RenderWindow& window, float dt)
 {
-	for (int y = 0; y < this->height; ++y)
+	for (int y = 0; y < this->height; y++)
 	{
-		for (int x = 0; x < this->width; ++x)
+		for (int x = 0; x < this->width; x++)
 		{
 			sf::Vector2f pos;
 			pos.x = x * this->tileSize;
@@ -86,9 +86,9 @@ void Map::draw(sf::RenderWindow& window, float dt)
 
 void Map::updateDirection(TileType tileType)
 {
-	for (int y = 0; y < this->height; ++y)
+	for (int y = 0; y < this->height; y++)
 	{
-		for (int x = 0; x < this->width; ++x)
+		for (int x = 0; x < this->width; x++)
 		{
 			int pos = y*this->width + x;
 
@@ -151,3 +151,58 @@ void Map::updateDirection(TileType tileType)
 	return;
 }
 
+void Map::depthFirstSearch(std::vector<TileType>& whitelist, sf::Vector2i pos, int label, int type=0)
+{
+	/* Bounds checking */
+	if (pos.x < 0 || pos.x >= this->width || pos.y < 0 || pos.y >= this->height) return;
+
+	if (this->tiles[pos.y * this->width + pos.x].regions[type] != 0) return;
+
+	bool found = false;
+	for (auto type : whitelist)
+	{
+		if (type == this->tiles[pos.y * this->width + pos.x].type)
+		{
+			found = true;
+			break;
+		}
+	}
+
+	if (!found) return;
+
+	this->tiles[pos.y * this->width + pos.x].regions[type] = label;
+
+	depthFirstSearch(whitelist, pos + sf::Vector2i(-1, 0), label, type);
+	depthFirstSearch(whitelist, pos + sf::Vector2i(1, 0), label, type);
+	depthFirstSearch(whitelist, pos + sf::Vector2i(0, -1), label, type);
+	depthFirstSearch(whitelist, pos + sf::Vector2i(0, 1), label, type);
+
+	return;
+}
+
+void Map::findConnectedRegions(std::vector<TileType> whitelist, int type=0)
+{
+	int regions = 1;
+	for (auto& tile : this->tiles) tile.regions[type] = 0;
+
+	for (int y = 0; y < this->height; y++)
+	{
+		for (int x = 0; x < this->width; x++)
+		{
+			bool found = false;
+			for (auto type : whitelist)
+			{
+				if (type == this->tiles[y * this->width + x].type)
+				{
+					found = true;
+					break;
+				}
+			}
+			if (this->tiles[y * this->width + x].regions[type] == 0 && found)
+			{
+				depthFirstSearch(whitelist, sf::Vector2i(x, y), regions++, type);
+			}
+		}
+	}
+	this->numRegions[type] = regions;
+}
