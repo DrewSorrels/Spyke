@@ -47,7 +47,7 @@ void AnimationHandler::addAnim(Animation& anim)
 void AnimationHandler::changeAnim(unsigned int animID)
 {
 	/* Do not change the animatino if the aniation is currently active or the new animation does not exist */
-	if (this->currentAnim == animID || animID >= this->animations.size || animID < 0) return;
+	if (this->currentAnim == animID || animID >= this->animations.size() || animID < 0) return;
 
 	/* Set the current animation */
 	this->currentAnim = animID;

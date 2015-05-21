@@ -8,6 +8,7 @@
 #include "map.hpp"
 #include "tile.hpp"
 
+
 /* Load map from disk */
 void Map::load(const std::string& filename, unsigned int width, unsigned int height, std::map<std::string, Tile>& tileAtlas)
 {
